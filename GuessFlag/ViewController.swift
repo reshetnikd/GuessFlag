@@ -16,6 +16,7 @@ class ViewController: UIViewController {
     var countries = [String]()
     var correctAnswer = 0
     var score = 0
+    var questions = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,7 +44,15 @@ class ViewController: UIViewController {
         button2.setImage(UIImage(named: countries[1]), for: .normal)
         button3.setImage(UIImage(named: countries[2]), for: .normal)
         correctAnswer = Int.random(in: 0...2)
-        title = countries[correctAnswer].uppercased()
+//        title = countries[correctAnswer].uppercased()
+        let label = UILabel()
+        label.backgroundColor = .clear
+        label.numberOfLines = 2
+        label.font = UIFont.boldSystemFont(ofSize: 16.0)
+        label.textAlignment = .center
+        label.textColor = .black
+        label.text = "\(countries[correctAnswer].uppercased())\nScore: \(score)"
+        self.navigationItem.titleView = label
     }
 
     @IBAction func buttonTapped(_ sender: UIButton) {
@@ -57,9 +66,17 @@ class ViewController: UIViewController {
             score -= 1
         }
         
-        let ac = UIAlertController(title: title, message: "Your score is \(score).", preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: askQuestion))
-        present(ac, animated: true)
+        questions += 1
+        
+        if questions >= 10 {
+            let ac = UIAlertController(title: title, message: sender.tag != correctAnswer ? "Wrong! That's the flag of \(countries[sender.tag].uppercased())\nYour final score is \(score)" : "Your final score is \(score).", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(ac, animated: true)
+        } else {
+            let ac = UIAlertController(title: title, message: sender.tag != correctAnswer ? "Wrong! That's the flag of \(countries[sender.tag].uppercased())" : "Your score is \(score).", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Continue", style: .default, handler: askQuestion))
+            present(ac, animated: true)
+        }
     }
     
 }
