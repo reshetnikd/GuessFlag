@@ -17,10 +17,12 @@ class ViewController: UIViewController {
     var correctAnswer = 0
     var score = 0
     var questions = 0
+    var showScoreInTitle = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: .action, target: self, action: #selector(showScore))
         button1.layer.borderWidth = 1
         button2.layer.borderWidth = 1
         button3.layer.borderWidth = 1
@@ -36,6 +38,12 @@ class ViewController: UIViewController {
 //        countries.append("us")
         countries += ["estonia", "france", "germany", "ireland", "italy", "monaco", "nigeria", "poland", "russia", "spain", "uk", "us"]
         askQuestion()
+    }
+    
+    @objc func showScore() {
+        let ac = UIAlertController(title: "Score", message: "\(score)", preferredStyle: .actionSheet)
+        ac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(ac, animated: true)
     }
     
     func askQuestion(action: UIAlertAction! = nil) {
