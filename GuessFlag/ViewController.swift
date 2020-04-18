@@ -18,10 +18,13 @@ class ViewController: UIViewController {
     var score = 0
     var questions = 0
     var showScoreInTitle = false
+    var highestScore = 0
+    let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        highestScore = defaults.object(forKey: "highest") as? Int ?? 0
         navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: .compose, target: self, action: #selector(showScore))
         button1.layer.borderWidth = 1
         button2.layer.borderWidth = 1
@@ -61,6 +64,14 @@ class ViewController: UIViewController {
         label.textColor = .black
         label.text = "\(countries[correctAnswer].uppercased())\nScore: \(score)"
         self.navigationItem.titleView = label
+        
+        if score > highestScore {
+            highestScore = score
+            defaults.set(highestScore, forKey: "highest")
+            let ac = UIAlertController(title: "Congratulations!", message: "You set new High Score!", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(ac, animated: true)
+        }
     }
 
     @IBAction func buttonTapped(_ sender: UIButton) {
