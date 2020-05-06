@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import UserNotifications
 
 class ViewController: UIViewController {
     @IBOutlet var button1: UIButton!
@@ -41,6 +42,24 @@ class ViewController: UIViewController {
 //        countries.append("us")
         countries += ["estonia", "france", "germany", "ireland", "italy", "monaco", "nigeria", "poland", "russia", "spain", "uk", "us"]
         askQuestion()
+        // Send local notification that reminds players to come back and play every day.
+        let center = UNUserNotificationCenter.current()
+        center.removeAllPendingNotificationRequests()
+        
+        center.requestAuthorization(options: [.alert, .badge, .sound]) { (granted, error) in
+            if granted {
+                let content = UNMutableNotificationContent()
+                content.title = "Come back and play!"
+                content.body = "The more often you will play the better you will become in this game."
+                content.categoryIdentifier = "alarm"
+                content.sound = UNNotificationSound.default
+                
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 86400, repeats: true)
+                
+                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                center.add(request)
+            }
+        }
     }
     
     @objc func showScore() {
